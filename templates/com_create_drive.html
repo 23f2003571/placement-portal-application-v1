@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Document</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="margin: 25px;">
+   <h1>Create a Drive</h1><br>
+   <h5>Drive Name</h5>
+   <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="floatingInput" placeholder="Drive Name">
+      <label for="floatingInput">Drive Name</label>
+   </div><br>
+   <h5>Job Title</h5>
+   <div class="form-floating">
+      <input type="text" class="form-control" id="floatingTitle" placeholder="Job Title">
+      <label for="floatingTitle">Job Title</label>
+   </div><br>
+   <h5>Job Description</h5>
+   <div class="form-floating">
+      <textarea class="form-control" id="floatingDescription" placeholder="Job Description"></textarea>
+      <label for="floatingDescription">Job Description</label>
+   </div><br>
+    <h5>Eligibility Criteria</h5>
+   <div class="form-floating">
+      <input class="form-control" id="floatingEligibility" placeholder="Eligibility Criteria">
+      <label for="floatingEligibility">Eligibility Criteria</label>
+   </div><br>
+    <h5>Application Deadline</h5>
+   <div class="form-floating">
+      <input type="date" class="form-control" id="floatingDeadline" placeholder="Application Deadline">
+      <label for="floatingDeadline">Application Deadline</label>
+   </div><br>
+   <!--create button-->
+   <!--style-->
+   <div>
+      <button style="margin-left: 50%;" type="button" class="btn btn-success">Save</button></div>
+   </div>
+</body>
+</html>

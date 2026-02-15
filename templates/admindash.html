@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Admin Dashboard</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="margin: 8px;">
+   <!-- welcome admin -->
+   <div>
+       <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <label class="navbar-brand"><h4>Welcome Admin</h4></label>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+   </div>
+   <!-- regidtered companies -->
+   <div>
+      <table class="table" border="3">
+  <thead>
+    <th><h5><strong>Registered Companies</strong></h5></th>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Infosys</td>
+      <td><button type="button" class="btn btn-outline-danger">Blacklist</button></td>    
+   </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Reliance</td>
+      <td><button type="button" class="btn btn-outline-danger">Blacklist</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+    <!-- regidtered students -->
+    <div>
+      <table class="table" border="3">
+  <thead>
+    <th><h5><strong>Registered Students</strong></h5></th>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td><button type="button" class="btn btn-outline-danger">Blacklist</button></td>    
+   </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td><button type="button" class="btn btn-outline-danger">Blacklist</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+    <!-- companies applications -->
+   <div>
+      <table class="table" border="3">
+  <thead>
+    <th><h5><strong>Companies Applications</strong></h5></th>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Infosys</td>
+      <td><button type="button" class="btn btn-outline-success">Approve</button></td>    
+   </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Reliance</td>
+      <td><button type="button" class="btn btn-outline-success">Approve</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+   <hr>
+      <!-- Ongoing Drives -->
+   <div>
+      <h5><strong>Ongoing Drives</strong></h5>
+      <table class="table" border="3">
+  <thead>
+    <tr>
+      <th scope="col">Sr No.</th>
+      <th scope="col">Drive Name</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1001</th>
+      <td>Drive 1</td>
+      <td><button  style=" width: 190px;" type="button" class="btn btn-outline-info">view details</button>  <button  style=" width: 190px;" type="button" class="btn btn-outline-success">marke as complete</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+   <!--students applications-->
+   <div>
+      <hr>
+   <div>
+      <h5><strong>Applications</strong></h5>
+      <table class="table" border="3">
+  <thead>
+    <tr>
+      <th scope="col">Sr No.</th>
+      <th scope="col">Name</th>
+      <th scope="col">Drive</th>
+      <th scope="col">company</th>
+      <th scope="col">Date</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>abcd</td>
+      <td>Drive 2</td>
+      <td>Infosys</td>
+      <td>13/02/2026</td>
+      <td><button type="button" class="btn btn-outline-info">View</button></td>
+    </tr>
+     <tr>
+      <th scope="row">2</th>
+      <td>xyz</td>
+      <td>Drive 1</td>
+      <td>Reliance</td>
+      <td>10/02/2026</td>
+      <td><button type="button" class="btn btn-outline-info">View</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+   </div>
+</body>
+</html>

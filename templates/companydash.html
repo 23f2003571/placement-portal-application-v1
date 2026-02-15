@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Company Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="margin: 8px;">
+    <!-- welcome company -->
+   <div>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <label class="navbar-brand"><h4>Welcome Organisaiong 1</h4></label>
+    <a class="nav-link" href="#">logout</a>
+    </div>
+</nav>
+   </div><br>
+   <!-- upcoming drives -->
+   <div>
+      <table class="table">
+  <thead>
+    <th><h5><strong>Upcoming Drives</strong></h5></th>
+    <th></th>
+    <th><button style="float: right;width: 190px;"type="button" class="btn btn-success">Create</button></th>
+  </thead>
+  <table class="table" border="3">
+  <thead>
+    <tr>
+      <th scope="col">Sr No.</th>
+      <th scope="col">Drive Name</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1001</th>
+      <td>Drive 1</td>
+      <td><button  style=" width: 190px;" type="button" class="btn btn-outline-info">view details</button>  <button  style=" width: 190px;" type="button" class="btn btn-outline-success">marke as complete</button></td>
+    </tr>
+    <tr>
+      <th scope="row">1002</th>
+      <td>Drive 2</td>
+      <td><button  style=" width: 190px;" type="button" class="btn btn-outline-info">view details</button>  <button  style=" width: 190px;" type="button" class="btn btn-outline-success">marke as complete</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+</table>
+   </div><br>
+    <!--closed drives-->
+   <div>
+      <hr>
+   <div>
+      <h5><strong>Closed Drives</strong></h5>
+      <table class="table" border="3">
+  <thead>
+    <tr>
+      <th scope="col">Sr No.</th>
+      <th scope="col">Drive Name</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Drive 2</td>
+      <td><button type="button" class="btn btn-outline-info">Update</button></td>
+    </tr>
+     <tr>
+      <th scope="row">2</th>
+      <td>Drive 1</td>
+      <td><button type="button" class="btn btn-outline-info">Update</button></td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+   </div>
+</body>
+</html>
