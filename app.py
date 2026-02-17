@@ -4,6 +4,7 @@ from application.database import db
 app=None
 
 def create_app():
+   global app
    app=Flask(__name__)
    app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///placement.sqlite3"
    db.init_app(app)
@@ -11,7 +12,7 @@ def create_app():
 
 app=create_app()
 
-from application.models import *    
+from application.models import *
 from application.controllers import *
 
 if __name__=="__main__":

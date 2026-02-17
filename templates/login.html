@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="/static/style.css">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="margin:8px;">
+<style>
+   body{
+      margin: 8px;
+      }
+   #canvas2{
+      height: 370px;
+   }
+</style>
+<body>
     <div id="main">
       <div id="canvas">
          <div id="canvas1">
@@ -15,16 +23,26 @@
             <form action="/login" method="post">
                <h1>Login Form</h1><br>
                <div class="mb-3">
-                  <label for="Input1" class="form-label">Registered Email ID:</label>
-                  <input type="text" class="form-control" id="Input1" placeholder="name@gmail.com" name="username">
+                  <label for="Input1" class="form-label">Username:</label>
+                  <input type="text" class="form-control" id="Input1"  name="username">
                </div>
                <div class="mb-3">
                   <label for="Input2" class="form-label">Password:</label>
                   <input type="password" class="form-control" id="Input2" name="password">
                </div>
+               {% if error_msg %}
+                  <div class="alert alert-warning" role="alert" style="padding: 0%; text-align: center;">
+                     {{ error_msg }}
+                  </div>
+               {% endif %}
+               {% if error %}
+                  <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center;">
+                     {{ error }}
+                  </div>
+               {% endif %}
                <div style="text-align: center;">
                   <input type="submit" class="btn btn-primary" value="Login"><br>
-                  Are you a new user? <a href="/register">Register</a>
+                  Are you a new user? <a href="{{ url_for('registeration') }}">Register</a>
                </div>
             </form>
          </div>

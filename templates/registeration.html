@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>registration page</title>
+   <!-- "{{ url_for('static', filename='style.css') }}" -->
+    <link rel="stylesheet" href="/static/style.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="margin:8px;">
+    <div id="main">
+      <div id="canvas">
+         <div id="canvas1">
+         <div id="canvas2">
+            <form action="/registeration" method="post">
+               <h1>Register Form</h1><br>
+               <div class="mb-3">
+                  <label for="Input1" class="form-label">Username:</label>
+                  <input type="text" class="form-control" id="Input1" placeholder="enter your username" name="username">
+               </div>
+               <div class="mb-3">
+                  <label for="Input2" class="form-label">Email ID(Username):</label>
+                  <input type="email" class="form-control" id="Input2" placeholder="enter your email id" name="email">
+               </div>
+               <div class="mb-3">
+                  <label for="Input3" class="form-label">Password:</label>
+                  <input type="password" class="form-control" id="Input3" placeholder="enter your password" name="password">
+               </div>
+               <label>Registering as</label>
+               <select name="role">
+                  <option selected disabled>role</option>
+                  <option value="student">Student</option>
+                  <option value="company">Company</option>
+               </select>
+               <br><br>
+               <div style="text-align: center;">
+                  <input type="submit" class="btn btn-primary" value="Register"><br>
+                  Already registered? <a href="{{ url_for('login') }}">Login</a>
+               </div>
+            </form>
+         </div>
+      </div>
+      </div>
+    </div>
+</body>
+</html>
