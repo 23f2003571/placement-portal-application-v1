@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Create Company Profile{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #141517, #3a3f47);
+        color: #e2e8f0;
+    }
+    .container {
+        width: 95%;
+        margin: auto;
+    }
+  .card{
+        background:rgba(255,255,255,0.05);
+        border: 1px solid #737373;
+        border-radius: 50px;
+        padding: 30px;
+        margin: 25%;
+        margin-top: 10px;
+        margin-bottom: 0%;
+  }
+   h1 {
+        text-align: center;
+        color: #fffcfc;
+    }
+    label {
+      font-weight: bold;
+        color: #ffffff;
+        text-shadow: 15px 15px 15px #000000;
+    }
+    button {
+        margin-left: 45%;
+    }
+</style>
+<div  class="container">
+   <h1>Company Profile</h1>
+   <div class="card">
+<form action="/company_profile" method="POST">
+   <div>
+      <label for="Input1" class="form-label">Company Name :</label>
+      <input name="company_name" type="text" class="form-control" id="Input1" placeholder="Drive name"><br>
+   </div>
+   <div>
+      <label for="Input2" class="form-label">Hr Contact :</label>
+      <input name="hr_contact" type="text" class="form-control" id="Input2" placeholder="Job title"><br>
+   </div>
+   <div>
+      <label for="Input3" class="form-label">Website :</label>
+      <textarea name="website" class="form-control" id="Input3" placeholder="Drive description"></textarea><br>
+   </div>
+   <div>
+      <label for="Input4" class="form-label">Location :</label>
+      <input name="location" type="text" class="form-control" id="Input4" placeholder="Company name"><br>
+   </div>
+   <div>
+      <button type="submit"class="btn btn-success">Save</button></div>
+</div>
+</form>
+</div>
+{% endblock %}

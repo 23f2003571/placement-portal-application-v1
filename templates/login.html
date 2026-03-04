@@ -1,53 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <title>login page</title>
-   <!-- "{{ url_for('static', filename='style.css') }}" -->
-    <link rel="stylesheet" href="/static/style.css">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% extends "base.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
 <style>
-   body{
-      margin: 8px;
-      }
-   #canvas2{
-      height: 370px;
-   }
+#canvas1{
+   width: 60%;
+   margin: auto;
+   margin-top: 10px;
+}
+#canvas2{
+   width: 400px;
+   height: 390px;
+   padding: 10px;
+   margin: auto;
+   border: 3px solid darkgray;
+   margin-top: 100px;
+   background-color: rgb(254, 255, 255);
+   color: black;
+}
+label{
+   font-weight: bold;
+}
+
 </style>
 <body>
     <div id="main">
-      <div id="canvas">
          <div id="canvas1">
          <div id="canvas2">
             <form action="/login" method="post">
-               <h1>Login Form</h1><br>
-               <div class="mb-3">
+               <h1>Login</h1>
+               <div>
                   <label for="Input1" class="form-label">Username:</label>
-                  <input type="text" class="form-control" id="Input1"  name="username">
+                  <input name="name" type="text" class="form-control" id="Input1" placeholder="your username"><br>
                </div>
-               <div class="mb-3">
+               <div>
                   <label for="Input2" class="form-label">Password:</label>
-                  <input type="password" class="form-control" id="Input2" name="password">
+                  <input name="password" type="password" class="form-control" id="Input2" placeholder="your password"><br>
                </div>
-               {% if error_msg %}
+               {% if error2 %}
                   <div class="alert alert-warning" role="alert" style="padding: 0%; text-align: center;">
-                     {{ error_msg }}
+                     {{ error2 }}
                   </div>
                {% endif %}
-               {% if error %}
+               {% if error1 %}
                   <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center;">
-                     {{ error }}
+                     {{ error1 }}
                   </div>
                {% endif %}
-               <div style="text-align: center;">
+               <div style="text-align: center; font-weight: bold;">
                   <input type="submit" class="btn btn-primary" value="Login"><br>
                   Are you a new user? <a href="{{ url_for('registeration') }}">Register</a>
                </div>
             </form>
          </div>
       </div>
-      </div>
     </div>
-</body>
-</html>
+    <br><br><br>
+{% endblock %}

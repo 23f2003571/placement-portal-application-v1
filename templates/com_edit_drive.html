@@ -31,13 +31,13 @@
         text-shadow: 15px 15px 15px #000000;
     }
     button {
-        margin-left: 45%;
+        margin-left: 40%;
     }
 </style>
 <div  class="container">
-   <h1>Create a Drive</h1>
+   <h1>Edit a Drive</h1>
    <div class="card">
-   <form action="/create_drive" method="post">
+   <form action="/company_edit/{{ drive.id }}" method="post">
    <div>
       <label for="Input2" class="form-label">Job Title:</label>
       <input name="jobtitle" type="text" class="form-control" id="Input2" placeholder="Job title"><br>
@@ -51,7 +51,7 @@
       <input name="salary" type="text" class="form-control" id="Input6" placeholder="Salary"><br>
    </div>
    <div>
-      <button type='submit'class="btn btn-success">Save</button></div>
+      <button type='submit'class="btn btn-success">Update Drive</button></div>
 </form>
    </div>
 </div>

@@ -1,28 +1,4 @@
 *{
-   margin:0px;
-}
-#main,#canvas{
-   border: 2px solid black;
-
-}
-#canvas1{
-   width: 60%;
-   margin: auto;
-   height: 800px;
-}
-#canvas2{
-   width: 400px;
-   height: 465px;
-   padding: 10px;
-   margin: auto;
-   border: 3px solid darkgray;
-   margin-top: 200px;
-}
-.heading{
-   margin:3px;
-   padding-left: 3px;
-   margin-top: 15px;
-   text-align: center;
-   font-weight: bold;
-}
-
+   box-sizing: border-box;
+   margin: 0;
+   font-family:Georgia, 'Times New Roman', Times, serif;}

@@ -6,7 +6,9 @@ app=None
 def create_app():
    global app
    app=Flask(__name__)
+   app.secret_key = 'ppa12345'
    app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///placement.sqlite3"
+   app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
    db.init_app(app)
    return app
 

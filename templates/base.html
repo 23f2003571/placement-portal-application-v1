@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>{% block title %}Placement Portal{% endblock %}</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+      body {
+            background: linear-gradient(135deg, #232428, #3a3f47);
+            color: #fcfcfc;
+        }
+      nav{
+         display: flex;
+         background-color: #020617;
+         padding: 15px;
+      }
+      nav h5{
+         color: aliceblue;
+         display: inline-block;
+         font-size: 20px;
+         margin-left: 20px;
+         font-weight: bold;
+      }
+      .nav-right{
+         margin-left: auto;
+      }
+      nav a{
+         color: aliceblue;
+         text-decoration: none;
+         font-size: 20px;
+         margin-left: 50px;
+      }
+      nav a:hover{
+         font-weight: bold;
+         text-decoration: underline;
+      }
+      footer{
+         background-color: #020617;
+         color:aliceblue;
+         font-size: large;
+         text-align: center;
+         padding: 10px;
+         height: 60px;
+         width: 100%; 
+      }
+   </style>
+</head>
+<body>
+   <div>
+      <nav>
+         <div><a href="/"><h5>Home</h5></a></div>
+         <div class="nav-right">
+    {% if session.get("role") == "admin" %}
+        <a href="/admindash">Admin Dashboard</a>
+        <a href="/logout">Logout</a>
+
+    {% elif session.get("role") == "student" %}
+        <a href="/studentdash">Student Dashboard</a>
+        <a href="student_history">History</a>
+        <a href="/logout">Logout</a>
+
+    {% elif session.get("role") == "company" %}
+        <a href="/companydash">Company Dashboard</a>
+        <a href="/logout">Logout</a>
+
+    {% else %}
+        <a href="/login">Login</a>
+        <a href="/registeration">Register</a>
+    {% endif %}
+         </div>
+      </nav>
+   </div>
+      <br>
+      {% block content %}
+      {% endblock %}
+   <div>
+      <br><br>
+      <footer>
+         <p>&copy; 2026 Placement Portal. All rights reserved.</p>
+      </footer>
+   </div>
+</body>
+</html>
