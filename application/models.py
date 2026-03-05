@@ -17,9 +17,10 @@ class User(db.Model):
 class Studentprofile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
+    student_name = db.Column(db.String(50), nullable=False)
     department = db.Column(db.String(150), nullable=False)
     cgpa = db.Column(db.Float, nullable=False)
-    resume = db.Column(db.String(200))
+    resume = db.Column(db.String(500))
 
     user = db.relationship('User', back_populates='student_profile')
     applications = db.relationship('Application', back_populates='student',cascade="all, delete")

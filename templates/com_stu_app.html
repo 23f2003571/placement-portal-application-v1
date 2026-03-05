@@ -47,7 +47,10 @@
         border-bottom: 1px solid #000000;
         color:#feffff
     }
-    button {
+    button{
+        width: 190px
+    }
+    a.btn {
         width: 190px;
     }
     select {
@@ -61,22 +64,25 @@
    <div class="container">
       <h1>Student Application</h1>
    <div class="card">
+ <form action="{{url_for('review_application', app_id=app.id)}}" method="POST">
   <img style="width: 190px;" src="https://static.vecteezy.com/system/resources/thumbnails/000/511/962/small/57_Student.jpg" alt="Student Icon">
-    <br><h3>Mr. Mark jonas</h3><br>
-    <h5><p><strong>Department :</strong> Computer Science and Engineering</p></h5>
-    <h5><p><strong>Drive :</strong> Drive 1</p></h5>
-    <h5><p><strong>Cgpa :</strong> 9.8</p></h5>
-    <h5><p><strong>Job Title :</strong> Data Scientist</p></h5>
+    <br><h3>{{app.student.student_name}}</h3><br>
+    <h5><p><strong>Department : </strong>{{app.student.department}}</p></h5>
+    <h5><p><strong>Drive : </strong>{{app.drive.id}}</p></h5>
+    <h5><p><strong>Cgpa : </strong>{{app.student.cgpa}}</p></h5>
+    <h5><p><strong>Job Title : </strong>{{app.drive.job_title}}</p></h5>
    <div>
-      <button class="btn btn-outline-primary">View Resume</button>
-      <select>
-         <option selected disabled>Update</option>
-         <option>Shortlist</option>
-         <option>Waiting</option>
-         <option>Reject</option>
+      <a href="{{ app.student.resume }}"  target="_blank" class="btn btn-outline-primary">View Resume</a>
+      <select name="status">
+        <option selected disabled>Select Status</option>
+        <option value="Shortlist" {% if app.status == "Shortlist" %}selected {% endif %}>Shortlist</option>
+        <option value="Waiting" {% if app.status == "Waiting" %}selected {% endif %}>Waiting</option>
+        <option value="Reject" {% if app.status == "Reject" %}selected {% endif %}>Reject</option>
       </select>
- <br><br>
-      <button style="margin-left: 40%;" class="btn btn-primary">Back</button></div>
+ <br><br><br><br>
+      <button type="submit" style="margin-left: 40%;" class="btn btn-success">Save</button>
+    </div>
+    </form>
    </div>
    </div>
 {% endblock %}

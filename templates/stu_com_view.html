@@ -21,7 +21,7 @@
 
   }
    h1 {
-      text-align: center;
+      margin-left: 30%;
         color: #fffcfc;
     }
     label {
@@ -47,24 +47,37 @@
         border-bottom: 1px solid #000000;
         color:#feffff
     }
-    button {
+    a.btn {
         margin-left: 35%;
         width: 190px;
     }
     </style>
    <div class="container">
-      <h1>Company Details</h1>
+   {% if error3 %}
+      <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center;">
+        {{ error3 }}
+      </div>
+    {% endif %}
+    <div style="display: flex;">
+      <h1>Company's Drive Details</h1>
+      <div style="margin-left: auto ;"><a href="{{url_for('studentdash')}}" class="btn btn-success">Back to dashboard</a></div>
+    </div>
    <div class="card">
   <img style="width: 200px;" src="https://www.creativefabrica.com/wp-content/uploads/2022/10/04/Architecture-building-company-icon-Graphics-40076545-1.jpg" alt="Student Icon">
-    <br><h3>Drive 1</h3><br>
-    <h5><div><p><strong>Job Title :</strong> Senior Software Developer</p></div></h5>
-    <h5><div><p><strong>Description :</strong> Responsible for developing and maintaining software applications.</p></div></h5>
-    <h5><div><p><strong>Salary :</strong> 600000</p></div></h5><br>
-    <h5><div><p><strong>Location :</strong> Bangalore</p></div></h5>
+    <br><h3>Drive Id : {{drive.id}}</h3><br>
+    <h5><div><p><strong>Job Title : </strong>{{drive.job_title}}</p></div></h5>
+    <h5><div><p><strong>Description : </strong>{{drive.job_description}}</p></div></h5>
+    <h5><div><p><strong>Salary : </strong>{{drive.salary}}</p></div></h5><br>
+    <h5><div><p><strong>Location : </strong>{{drive.company.location}}</p></div></h5>
    <div>
-      <button class="btn btn-outline-primary">Apply</button><button style="margin-left: 2%;" class="btn btn-outline-primary">Back</button></div>
+    {% if app %}
+        <a href=""  class="btn btn-primary" style="cursor: not-allowed;">
+        Applied <b style="color: chartreuse;">({{app.status}})</b></a>
+    {% else %}
+      <a href="{{url_for('apply_job', drive_id=drive.id)}}"  class="btn btn-outline-primary">
+        Apply</a>
+    {% endif %}
+      <a href="{{ url_for('stu_com_overview', company_id=drive.company_id) }}" style="margin-left: 2%;" class="btn btn-outline-primary">Back</a></div>
    </div>
    </div> 
-   </div>
-  
 {% endblock %}

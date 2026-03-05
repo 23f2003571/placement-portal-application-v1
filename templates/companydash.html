@@ -48,6 +48,9 @@
     button {
         width: 190px;
     }
+  .btn{
+     border-radius: 15px;
+  }
 </style>
    <div class="container">
     {% if error1 %}
@@ -73,7 +76,35 @@
     </a>
 </div>
 <hr>
-
+<div class="card">
+  <h3>Shortlisted Student</h3>
+  <table>
+    <thead>
+      <th>Student Name</th>
+      <th>Student Department</th>
+      <th>Student Cgpa</th>
+      <th>Resume</th>
+    </thead>
+    <tbody>
+    {% if drives %}
+      {% for item in drives %}
+       {% for app in item.shortlisted %}
+      <tr>
+        <td>{{app.student.student_name}}</td>
+        <td>{{app.student.department}}</td>
+        <td>{{app.student.cgpa}}</td>
+        <td><a href="{{ app.student.resume }}" target="_blank" class="btn btn-primary">Resume Link</a></td>
+      </tr>
+        {% endfor %}
+      {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No shortlisted student yet.</td>
+   </tr>
+  {% endif %}
+    </tbody>
+  </table>
+</div>
    <!-- upcoming drives -->
    <div class="card">
     <div style="display: flex;">
@@ -104,14 +135,17 @@
       <td>{{item.total_apps}}</td>
       <td><a href="{{url_for('view_drives', drive_id=item.job.id)}}"><button  class="btn btn-outline-info">view details</button></a>  
         <a href="{{url_for('company_edit', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-warning">Edit</button></a>
-        <a href="{{url_for('company_close', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-primary">Close(inactive)</button></a>  
+        <a href="{{url_for('company_close', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-primary">Close (Inactive)</button></a>  
         <a href="{{url_for('company_delete', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-danger">Delete</button></a></td>
     </tr>
-  </tbody>
-     {% endfor %}
+         {% endfor %}
   {% else %}
-   <p style="color:#1461ce;">No jobs posted yet.</p>
+  <tr>
+   <td style="color:#1461ce;">No jobs posted yet.</td>
+   </tr>
   {% endif %}
+  </tbody>
+
 </table>
    </div>
    <br>
@@ -121,7 +155,7 @@
       <table>
   <thead>
     <tr>
-      <th>Drive Name</th>
+      <th>Drive ID</th>
       <th>Job Title</th>
       <th>Actions</th>
     </tr>
@@ -134,8 +168,8 @@
       <td><a href="{{url_for('company_open', drive_id=drive.id)}}">
           <button class="btn btn-outline-primary">Activate</button></a></td>
     </tr>
+      {% endfor %}
   </tbody>
-  {% endfor %}
 </table>
    </div>
 </div>

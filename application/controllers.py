@@ -1,5 +1,6 @@
 from flask import Flask, abort,render_template,redirect,request,url_for,session
-
+from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
 from .models import *
 from app import app
 
@@ -39,8 +40,8 @@ def login():
          return redirect(url_for('studentdash'))
       
       elif user and user.role == 'company':
-         # if not user.is_approved:
-         #    return render_template('login.html',error1="Waiting for admin approval")
+         if not user.is_approved:
+            return render_template('login.html',error1="Waiting for admin approval")
          session['name'] = user.username
          session['user_id'] = user.id
          session['role'] = user.role
@@ -62,28 +63,114 @@ def logout():
 # Student----------------------------------------------------------------------------------------------------
 @app.route('/studentdash',methods=['GET','POST'])
 def studentdash():
+   if 'user_id' not in session:
+      return redirect(url_for('login'))
    
-   return render_template('studentdash.html')
-
-@app.route('/stu_com_overview',methods=['GET','POST'])
-def stu_com_overview():
+   student = Studentprofile.query.filter_by(user_id=session['user_id']).first()
+   if not student:
+      return redirect(url_for('student_profile'))
    
-   return render_template('stu_com_overview.html')
+   companies=Companyprofile.query.join(User).filter(User.is_approved==True).all()
+   apps=Application.query.filter_by(student_id=student.id).all()
+   return render_template('studentdash.html',
+                          student=student,
+                          companies=companies,
+                          apps=apps,
+                          )
 
-@app.route('/stu_com_view',methods=['GET','POST'])
-def stu_com_view():
+@app.route('/student_profile', methods=["GET","POST"])
+def student_profile():
+   user_id = session.get("user_id")
+
+   if not user_id:
+      return redirect("/login")
    
-   return render_template('stu_com_view.html')
+   student = Studentprofile.query.filter_by(user_id=user_id).first()
 
-@app.route('/student_history',methods=['GET','POST'])
+   if request.method == 'POST':
+      if student:
+         if request.form.get('student_name'):
+            student.student_name = request.form.get('student_name')
+         if request.form.get('department'):
+            student.departmentt = request.form.get('department')
+         if request.form.get('cgpa'):
+            student.cgpa = request.form.get('cgpa')
+
+         if request.form.get('resume'):
+            student.resume = request.form.get('resume')
+      else:
+         student = Studentprofile(
+            user_id=user_id, 
+            student_name=request.form["student_name"], 
+            department=request.form["department"], 
+            cgpa=request.form['cgpa'], 
+            resume=request.form['resume'])
+      db.session.add(student)
+      db.session.commit()
+      return redirect(url_for('studentdash'))
+   return render_template('student_profile.html')
+
+@app.route('/stu_com_overview/<int:company_id>',methods=['GET','POST'])
+def stu_com_overview(company_id):
+   company = Companyprofile.query.get(company_id)
+   if company is None:
+      abort(404)
+
+   drives = Placementdrive.query.filter_by(company_id=company_id,is_closed=False).all()
+   return render_template('stu_com_overview.html',
+                          drives=drives,
+                          company=company)
+
+@app.route('/stu_com_view/<int:drive_id>')
+def stu_com_view(drive_id):
+   drive = Placementdrive.query.get(drive_id)
+   if drive is None:
+      abort(404)
+
+
+   app = Application.query.filter_by(drive_id=drive_id).first()
+   return render_template('stu_com_view.html', 
+                          app=app,
+                          drive=drive)
+
+@app.route('/student_history')
 def student_history():
+   user_id = session.get("user_id")
 
-   return render_template('student_history.html')
+   if not user_id:
+      return redirect("/login")
+   
+   student = Studentprofile.query.filter_by(user_id=session['user_id']).first()
+   if not student:
+      return redirect(url_for('student_profile'))
+   
+   apps=Application.query.filter_by(student_id=student.id).all()
+   return render_template('student_history.html',
+                          student=student,
+                          apps=apps)
 
-@app.route('/student_admin_view_stu',methods=['GET','POST'])
-def student_admin_view_stu():
+@app.route('/apply_job/<int:drive_id>')
+def apply_job(drive_id):
+   if 'user_id' not in session:
+      return redirect(url_for('login'))
+   
+   student=Studentprofile.query.filter_by(user_id=session["user_id"]).first()
+   if not student:
+      return render_template('studentdash.html', error2="Please complete your student profile first.")
+   
+   existing = Application.query.filter_by(drive_id=drive_id, student_id=student.id).first()
+   drive=Placementdrive.query.get(drive_id)
+   if existing:
+      return render_template('stu_com_view.html',drive=drive, error3="Already applied!")
+   
+   app = Application(drive_id=drive_id, student_id=student.id)
+   db.session.add(app)
+   db.session.commit()
+   return redirect(url_for('stu_com_view', drive_id=drive_id))
 
-   return render_template('admin_view_stu.html')
+@app.route('/student_search')
+def student_search():
+    return render_template("studentdash.html")
 # Company-----------------------------------------------------------------------------------------------------
 @app.route('/companydash',methods=['GET','POST'])
 def companydash():
@@ -102,9 +189,12 @@ def companydash():
    for drive in drives:
       total_apps = Application.query.filter_by(drive_id=drive.id).count()
 
+      shortlisted= Application.query.filter_by(drive_id=drive.id, status='Shortlist').all()
+
       drive_data.append({
          "job": drive,
-         "total_apps": total_apps
+         "total_apps": total_apps,
+         "shortlisted": shortlisted
       })
    
    return render_template('companydash.html',
@@ -179,8 +269,17 @@ def view_drives(drive_id):
 
 @app.route('/review-application/<int:app_id>', methods=['GET', 'POST'])
 def review_application(app_id):
-   
-   return render_template('com_stu_app.html')
+   app = Application.query.get(app_id)
+   if app is None:
+      abort(404)
+
+   if request.method=="POST":
+      status=request.form.get('status')
+
+      app.status=status
+      db.session.commit()
+      return redirect(url_for('view_drives', drive_id=app.drive_id))
+   return render_template('com_stu_app.html', app=app)
 
 @app.route('/company_close/<int:drive_id>')
 def company_close(drive_id):

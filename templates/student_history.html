@@ -52,40 +52,41 @@
     }
 </style>
    <div class="container">
-    <p><strong>Student Name:</strong> abc</p><br>
-    <p><strong>Department:</strong> Computer Science</p>
+    <h5><strong>Student Name : </strong>{{student.student_name}}</h5><br>
+    <h5><strong>Department : </strong>{{student.department}}</h5>
+    <div style="display: flex;">
+    <div style="margin-left: auto ;"><a href="{{url_for('studentdash')}}" class="btn btn-success">Back to dashboard</a></div>
+    </div>
   <br>
    <div class="card">
      <table>
   <thead>
     <tr>
       <th>Drive No.</th>
-      <th>Interview Type</th>
+      <th>Company Name</th>
       <th>Job Title</th>
       <th>Results</th>
-      <th>Remark</th>
+      <th>Applied Date</th>
     </tr>
   </thead>
   <tbody>
+  {% if apps %}
+    {% for app in apps %}
     <tr>
-      <th>1</th>
-      <td>In-person</td>
-      <td>SDE</td>
-      <td>Shortlisted</td>
-      <td>None</td>
+      <th>{{app.drive.id}}</th>
+      <td>{{app.drive.company.company_name}}</td>
+      <td>{{app.drive.job_title}}</td>
+      <td>{{app.status}}</td>
+      <td>{{app.application_date.date()}}</td>
     </tr>
-     <tr>
-      <th scope="row">2</th>
-     <td>In-person</td>
-      <td>SWE</td>
-      <td>Rejected</td>
-      <td>None</td>
+    {% endfor %}
+    {% else %}
+    <tr>
+       <td style="color:#1461ce;">No record yet..</td>
     </tr>
+  {% endif %}
   </tbody>
 </table>
-</div><br>
- <div>
-      <button class="btn btn-outline-primary">Go Back</button></div>
-   </div>
-   </div>
+</div>
+</div>
 {% endblock %}

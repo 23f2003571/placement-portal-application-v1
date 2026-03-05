@@ -48,31 +48,72 @@
     button {
         width: 190px;
     }
+    .bar{
+      background:rgba(255,255,255,0.05);
+        border: 1px solid #f9f6f6;
+        color: #e2e8f0;
+        border-radius: 20px;
+        padding: 10px;
+        margin-top: 25px;
+       width: 85%;
+      }
+      .bar:hover{
+        background:rgba(77, 77, 78, 0.1);
+      }
+  .btn{
+     border-radius: 15px;
+  }
 </style>
 <div  class="container">
+   {% if error2 %}
+      <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center;">
+        {{ error2 }}
+      </div>
+    {% endif %}
   <h1>Student Dashboard</h1>
+  <div>
+    <form method="GET" action="{{url_for('student_search')}}">    
+      <input class="bar" type="text" name="search" placeholder="Search by name or ID">
+      <button type="submit" class="btn btn-outline-success">Search</button>
+  </form>
+  </div>
     <div class="card">
-      <h3>Profile</h3>
-      <p>Name: John Doe</p>
-      <p>Department: Computer Science</p>
-      <p>Cgpa: 8.5</p>
-      <p>resume-link: .pdf</p>
-      <button class="btn btn-info">Create/Edit Profile</button>
-    </div>
+      <h3>Student Profile</h3>
+   {% if student and student.student_name %}      
+       <p><b>Name : </b> {{ student.student_name }}</p>
+        <p><b>Department : </b> {{ student.department }}</p>
+        <p><b>Cgpa : </b> {{ student.cgpa }}</p>
+        <p><b>Resume : </b><a href="{{ student.resume }}" target="_blank">resume-link</a></p>
+    {% else %}
+        <p style="font-style: italic; font-weight: bold; color: brown;">Profile Incomplete</p>
+    {% endif %}
+    
+    <a href="/student_profile">
+        <button class="btn btn-warning">Complete / Edit Profile</button>
+    </a>
+</div>
    <div class="card">
       <table>
         <h3>Organizations</h3>
   <thead>
-    <th>Company</th>
+    <th>Company Name</th>
     <th>Action</th>
   </thead>
   <tbody>
+  {% if companies %}
+    {% for company in companies %}  
     <tr>
-      <td>Infosys</td>
-      <td><a href="/stu_com_overview"><button class="btn btn-outline-info">View Details</button></a></td> 
+      <td>{{company.company_name}}</td>
+      <td><a href="{{url_for('stu_com_overview', company_id=company.id)}}"><button class="btn btn-outline-info">View Details</button></a></td> 
    </tr>
-  </tbody>
-</table>
+        {% endfor %}
+  {% else %}
+  <tr>
+   <td style="color:#1461ce;">No company approved yet...</td>
+   </tr>
+  {% endif %}
+  </tbody> 
+</table> 
    </div>
    <!--applied drives-->
    <div class="card">
@@ -80,21 +121,31 @@
       <table>
   <thead>
     <tr>
-      <th>ID</th>
       <th>Drive Name</th>
       <th>Company</th>
+      <th>Job Title</th>
       <th>Date</th>
+      <th>Status</th>
       <th>Action</th>
     </tr>
   </thead>
   <tbody>
+    {% if apps %}
+      {% for app in apps %}
     <tr>
-      <td>1</td>
-      <td>Drive 1</td>
-      <td>Infosys</td>
-      <td>12/02/2026</td>
-      <td><a href="/admin_view_stu"><button class="btn btn-outline-info">View Details</button></a></td>
+      <td>{{app.id}}</td>
+      <td>{{ app.drive.company.company_name}}</td>
+      <td>{{app.drive.job_title}}</td>
+      <td>{{app.application_date.date()}}</td>
+      <td>{{app.status}}</td>
+      <td><a href="{{url_for('stu_com_view', drive_id=app.drive_id)}}"><button class="btn btn-outline-info">View Details</button></a></td>
     </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+       <td style="color:#1461ce;">Not applied yet.</td>
+    </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>

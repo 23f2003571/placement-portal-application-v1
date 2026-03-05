@@ -57,7 +57,7 @@
 
     {% elif session.get("role") == "student" %}
         <a href="/studentdash">Student Dashboard</a>
-        <a href="student_history">History</a>
+        <a href="{{url_for('student_history')}}">History</a>
         <a href="/logout">Logout</a>
 
     {% elif session.get("role") == "company" %}

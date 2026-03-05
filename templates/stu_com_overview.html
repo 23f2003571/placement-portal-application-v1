@@ -50,28 +50,41 @@
         margin-left: 48%;
         width: 190px;
     }
+      .btn{
+     border-radius: 15px;
+  }
 </style>
    <div class="container">
-   <h1>Overview</h1>
-   <h6>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Praesentium dolore sed libero molestiae omnis possimus, reprehenderit laborum necessitatibus tempora sit veritatis! Odio obcaecati perferendis praesentium corrupti accusantium soluta deserunt pariatur?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur quasi illo, architecto excepturi sit mollitia! Repellat qui hic, provident, dolore adipisci quod consequatur eligendi fugiat voluptates quam ad temporibus quas?
-   Quae alias, quod animi in iste molestias dolorum, qui culpa magnam adipisci ex, facilis labore dolorem odio? Recusandae reprehenderit reiciendis veritatis repudiandae animi officiis, ipsa deserunt natus, cum libero similique.
-   borum, quos saepe iste suscipit officiis pariatur corrupti placeat soluta illo doloribus voluptate totam.</h6><br>
+    <div style="display: flex;">
+   <div><h1  style="font-style:italic;color: blueviolet;">Overview of  {{company.company_name}} company</h1></div> <div style="margin-left: auto ;"><a href="/studentdash"><button class="btn btn-success">Back</button></a></div>
+   </div>
+
    <br>
+   <h5>
+        <p><b>Hr Contact : </b> {{ company.hr_contact }}</p>
+        <p><b>Website : </b> {{ company.website }}</p>
+        <p><b>Location : </b> {{ company.location }}</p></h5>
+<br>
+
    <div class="card">
+      <h5>Current Drives</h5>
       <table>
-    <h5>Current Drives</h5>
   <tbody>
+  {% if drives %}
+    {% for drive in drives %}
     <tr>
-      <td>Drive 1</td>
-      <td><a href="/stu_com_view"><button class="btn btn-outline-info">View Details</button></a></td>    
+      <td>{{drive.id}}</td>
+      <td>{{drive.job_title}}</td>
+      <td><a href="{{url_for('stu_com_view', drive_id=drive.id)}}"><button class="btn btn-outline-info">View Details</button></a></td>    
    </tr>
-    <tr>
-      <td>Drive 2</td>
-      <td><a href="/stu_com_view"><button  class="btn btn-outline-info">View Details</button></a></td>
-    </tr>
-  </tbody>
+   {% endfor %}
+  {% else %}
+  <tr>
+   <td style="color:#1461ce;">No jobs posted yet.</td>
+   </tr>
+  {% endif %}
+  </tbody> 
 </table>
    </div> 
    </div>  
-   </div>
 {% endblock %}
