@@ -22,6 +22,7 @@
    h1 {
         text-align: center;
         color: #fffcfc;
+        text-shadow: 20px 20px 20px#000102 ;
     }
     h3 {
         color: #ffffff;
@@ -45,10 +46,9 @@
         font-size: 18px;
         color: #e2e8f0;
     }
-    button {
-        width: 190px;
-    }
+
   .btn{
+    width: 190px;
      border-radius: 15px;
   }
 </style>
@@ -80,20 +80,26 @@
   <h3>Shortlisted Student</h3>
   <table>
     <thead>
+      <th>Drive Id</th>
+      <th>Job Title</th>
       <th>Student Name</th>
       <th>Student Department</th>
       <th>Student Cgpa</th>
-      <th>Resume</th>
+      <th style="padding-left: 70px;">Resume</th>
+      <th></th>
     </thead>
     <tbody>
     {% if drives %}
       {% for item in drives %}
-       {% for app in item.shortlisted %}
+       {% for app in item.shortlist %}
       <tr>
+        <td>{{item.job.id}}</td>
+        <td>{{item.job.job_title}}</td>
         <td>{{app.student.student_name}}</td>
         <td>{{app.student.department}}</td>
         <td>{{app.student.cgpa}}</td>
-        <td><a href="{{ app.student.resume }}" target="_blank" class="btn btn-primary">Resume Link</a></td>
+        <td><a href="{{ app.student.resume }}" target="_blank" class="btn btn-secondary">Resume Link</a></td>
+        <td><a href="{{url_for('review_application', app_id=app.id)}}" class="btn btn-dark">View Application</a></td>
       </tr>
         {% endfor %}
       {% endfor %}
@@ -133,10 +139,10 @@
         {% endif %}
       </td>
       <td>{{item.total_apps}}</td>
-      <td><a href="{{url_for('view_drives', drive_id=item.job.id)}}"><button  class="btn btn-outline-info">view details</button></a>  
-        <a href="{{url_for('company_edit', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-warning">Edit</button></a>
-        <a href="{{url_for('company_close', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-primary">Close (Inactive)</button></a>  
-        <a href="{{url_for('company_delete', drive_id=item.job.id)}}"><button  type="button" class="btn btn-outline-danger">Delete</button></a></td>
+      <td><a href="{{url_for('view_drives', drive_id=item.job.id)}}" class="btn btn-outline-info">view details</a>  
+        <a href="{{url_for('company_edit', drive_id=item.job.id)}}" class="btn btn-outline-warning">Edit</a>
+        <a href="{{url_for('company_close', drive_id=item.job.id)}}" class="btn btn-outline-primary">Close (Inactive)</a>  
+        <a href="{{url_for('company_delete', drive_id=item.job.id)}}" class="btn btn-outline-danger">Delete</a></td>
     </tr>
          {% endfor %}
   {% else %}
@@ -157,7 +163,7 @@
     <tr>
       <th>Drive ID</th>
       <th>Job Title</th>
-      <th>Actions</th>
+      <th style="padding-left: 70px;">Actions</th>
     </tr>
   </thead>
   <tbody>

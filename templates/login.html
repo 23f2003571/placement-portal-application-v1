@@ -37,6 +37,11 @@ label{
                   <label for="Input2" class="form-label">Password:</label>
                   <input name="password" type="password" class="form-control" id="Input2" placeholder="your password"><br>
                </div>
+               {% if error3 %}
+                  <div class="alert alert-warning" role="alert" style="padding: 0%; text-align: center;">
+                     {{ error3 }}
+                  </div>
+               {% endif %}
                {% if error2 %}
                   <div class="alert alert-warning" role="alert" style="padding: 0%; text-align: center;">
                      {{ error2 }}

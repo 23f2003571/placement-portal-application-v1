@@ -34,6 +34,8 @@ def login():
 
       user = User.query.filter_by(username=name,password=password).first()
       if user and user.role == 'student':
+         if not user.is_approved:
+            return render_template('login.html',error3="You are blocked by admin")
          session['name'] = user.username
          session['user_id'] = user.id
          session['role'] = user.role
@@ -61,7 +63,7 @@ def logout():
    return redirect(url_for('index'))
 
 # Student----------------------------------------------------------------------------------------------------
-@app.route('/studentdash',methods=['GET','POST'])
+@app.route('/studentdash')
 def studentdash():
    if 'user_id' not in session:
       return redirect(url_for('login'))
@@ -72,6 +74,31 @@ def studentdash():
    
    companies=Companyprofile.query.join(User).filter(User.is_approved==True).all()
    apps=Application.query.filter_by(student_id=student.id).all()
+
+   search = request.args.get('search')
+
+   if search:
+      company = Companyprofile.query.filter(
+            Companyprofile.company_name.ilike(f"%{search}%")
+        ).first()
+
+      if company:
+            return redirect(url_for('stu_com_overview', company_id=company.id))
+
+      drive = Placementdrive.query.filter(
+         Placementdrive.job_title.ilike(f"%{search}%")
+      ).first()
+
+      if drive:
+         return redirect(url_for('stu_com_view', drive_id=drive.id))
+      
+      return render_template('studentdash.html',
+                          student=student,
+                          companies=companies,
+                          apps=apps,
+                          error3="Incorrect info..! Please write valid Companny Name or Job Title"
+                          )
+      
    return render_template('studentdash.html',
                           student=student,
                           companies=companies,
@@ -116,19 +143,19 @@ def stu_com_overview(company_id):
    if company is None:
       abort(404)
 
-   drives = Placementdrive.query.filter_by(company_id=company_id,is_closed=False).all()
+   drives = Placementdrive.query.filter_by(company_id=company_id,is_approved=True,is_closed=False).all()
    return render_template('stu_com_overview.html',
                           drives=drives,
                           company=company)
-
 @app.route('/stu_com_view/<int:drive_id>')
 def stu_com_view(drive_id):
    drive = Placementdrive.query.get(drive_id)
    if drive is None:
       abort(404)
 
+   student = Studentprofile.query.filter_by(user_id=session['user_id']).first()
 
-   app = Application.query.filter_by(drive_id=drive_id).first()
+   app = Application.query.filter_by(drive_id=drive_id, student_id=student.id).first()
    return render_template('stu_com_view.html', 
                           app=app,
                           drive=drive)
@@ -189,12 +216,18 @@ def companydash():
    for drive in drives:
       total_apps = Application.query.filter_by(drive_id=drive.id).count()
 
-      shortlisted= Application.query.filter_by(drive_id=drive.id, status='Shortlist').all()
+      apps= Application.query.filter_by(drive_id=drive.id, status='Shortlist').all()
 
+      shortlist = []
+
+      for app in apps:
+        if app.student.user.is_approved == True:
+            shortlist.append(app)
+            
       drive_data.append({
          "job": drive,
          "total_apps": total_apps,
-         "shortlisted": shortlisted
+         "shortlist": shortlist
       })
    
    return render_template('companydash.html',
@@ -328,15 +361,123 @@ def company_delete(drive_id):
 # Admin-------------------------------------------------------------------------------------------------------
 @app.route('/admindash',methods=['GET','POST'])
 def admindash():
+   if 'user_id' not in session:
+      return redirect(url_for('login'))
    
-   return render_template('admindash.html')
+   registered_companies = Companyprofile.query.join(User).filter(User.is_approved==True).all()
+   registered_students = Studentprofile.query.join(User).all()
+   approval_companies = User.query.filter_by(role='company', is_approved=False).all()   
+   job_drives = Placementdrive.query.filter_by(is_approved=False).all()
+   ongoing_drives = Placementdrive.query.filter_by(is_approved=True).all()
+   apps = Application.query.all()
 
-@app.route('/admin_view_stu',methods=['GET','POST'])
-def admin_view_stu():
-   
-   return render_template('admin_view_stu.html')
+   search = request.args.get('search')
 
-@app.route('/admin_view_com',methods=['GET','POST'])
-def admin_view_com():
-   
-   return render_template('admin_view_com.html')
+   if search:
+      if search.isdigit:
+         student = Studentprofile.query.filter_by(id=int(search)).first()
+         company = Companyprofile.query.filter_by(id=int(search)).first()
+
+         if student:
+            return redirect(url_for(''))
+         
+         if company:
+            return redirect(url_for(''))
+      
+      else:
+         student = Studentprofile.query.filter(
+            Studentprofile.student_name.ilike(f"%{search}%"))
+         company = Companyprofile.query.filter(
+            Companyprofile.company_name.ilike(f"%{search}%"))
+         
+         if student:
+            return redirect(url_for(''))
+         
+         if company:
+            return redirect(url_for(''))
+   return render_template('admindash.html',
+                          registered_companies=registered_companies,
+                          registered_students=registered_students,
+                          approval_companies=approval_companies,
+                          job_drives=job_drives,
+                          ongoing_drives=ongoing_drives,
+                          apps=apps)
+
+@app.route('/admin_view_stu/<int:app_id>')
+def admin_view_stu(app_id):
+   app = Application.query.get(app_id)
+   if app is None:
+      abort(404)
+   return render_template('admin_view_stu.html',
+                          app=app)
+
+@app.route('/admin_view_com/<int:drive_id>')
+def admin_view_com(drive_id):
+   drive = Placementdrive.query.get(drive_id)
+   if drive is None:
+      abort(404)
+
+   app = Application.query.filter_by(drive_id=drive_id).first()
+   return render_template('admin_view_com.html',
+                           app=app,
+                          drive=drive)
+
+@app.route('/company_approve/<int:company_id>')
+def company_approve(company_id):
+   user = User.query.get(company_id)
+   if user is None:
+      abort(404)
+
+   user.is_approved=True
+   db.session.commit()
+   return redirect(url_for('admindash'))
+
+@app.route('/company_blacklist/<int:company_id>')
+def company_blacklist(company_id):
+   user = User.query.get(company_id)
+   if user is None:
+      abort(404)
+
+   user.is_approved=False
+   db.session.commit()
+   return redirect(url_for('admindash'))
+
+@app.route('/student_approve/<int:student_id>')
+def student_approve(student_id):
+   user = User.query.get(student_id)
+   if user is None:
+      abort(404)
+
+   user.is_approved=True
+   db.session.commit()
+   return redirect(url_for('admindash'))
+
+@app.route('/student_blacklist/<int:student_id>')
+def student_blacklist(student_id):
+   user = User.query.get(student_id)
+   if user is None:
+      abort(404)
+
+   user.is_approved=False
+   db.session.commit()
+   return redirect(url_for('admindash'))
+
+@app.route('/drive_approve/<int:drive_id>')
+def drive_approve(drive_id):
+   drive = Placementdrive.query.get(drive_id)
+   if drive is None:
+      abort(404)
+
+   drive.is_approved=True
+   db.session.commit()
+   return redirect(url_for('admindash'))
+
+@app.route('/drive_disapprove/<int:drive_id>')
+def drive_disapprove(drive_id):
+   drive = Placementdrive.query.get(drive_id)
+   if drive is None:
+      abort(404)
+
+   drive.is_approved=False
+   db.session.commit()
+   return redirect(url_for('admindash'))

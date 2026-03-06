@@ -58,19 +58,30 @@
       margin-left: 4%; 
       width: 190px;
     }
+     a.btn {
+        width: 190px;
+        border-radius: 15px;
+    }
     </style>
    <div class="container">
       <h1>Student Application</h1>
    <div class="card">
   <img style="width: 190px;" src="https://static.vecteezy.com/system/resources/thumbnails/000/511/962/small/57_Student.jpg" alt="Student Icon">
-    <br><h3>Mr. Mark jonas</h3><br>
-    <h5><p><strong>Department :</strong> Computer Science and Engineering</p></h5>
-    <h5><p><strong>Drive :</strong> Drive 1</p></h5>
-    <h5><p><strong>Cgpa :</strong> 9.8</p></h5>
-    <h5><p><strong>Job Title :</strong> Data Scientist</p></h5>
-    <h5><p><strong>Application Status :</strong> Waiting</p></h5>
+    <br><h3>{{app.student.student_name}}</h3><br>
+    <h5><p><strong>Department : </strong>{{app.student.department}}</p></h5>
+    <h5><p><strong>Drive : </strong>{{app.drive.id}}</p></h5>
+    <h5><p><strong>Cgpa : </strong>{{app.student.cgpa}}</p></h5>
+    <h5><p><strong>Job Title : </strong>{{app.drive.job_title}}</p></h5>
+    <h5><p><strong>Application Status : </strong>
+        {% if app.status == "Applied" %}
+            <span style="color: rgb(232, 223, 124);">{{app.status}}</span>
+        {% elif app.status == "Reject"%}
+            <span style="color: rgb(220, 20, 20);">{{app.status}}</span>
+        {% else %}
+          <span style="color: rgb(43, 220, 20);">{{app.status}}</span>
+        {% endif %}</p></h5>
    <div>
-      <button class="btn btn-outline-primary">View Resume</button><button style="margin-left: 2%;" class="btn btn-outline-primary">Back</button></div>
+      <a href="{{app.student.resume}}" target="_blank" style="margin-left: 32%;" class="btn btn-outline-primary">View Resume</a> <a href="{{url_for('admindash')}}" style="margin-left: 2%;" class="btn btn-outline-primary">Back</a></div>
    </div>
    </div>   
 {% endblock %}

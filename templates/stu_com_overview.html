@@ -55,16 +55,18 @@
   }
 </style>
    <div class="container">
+    <h1 
+    style="text-shadow: 20px 20px 20px#000102 ;text-transform: capitalize;text-align: center; font-family: Georgia, 'Times New Roman', Times, serif;">
+        {{company.company_name}} Company
+    </h1><br>
     <div style="display: flex;">
-   <div><h1  style="font-style:italic;color: blueviolet;">Overview of  {{company.company_name}} company</h1></div> <div style="margin-left: auto ;"><a href="/studentdash"><button class="btn btn-success">Back</button></a></div>
-   </div>
-
-   <br>
+   <div><h1  style="font-style:italic;">Overview of company</h1></div> <div style="margin-left: auto ;"><a href="/studentdash"><button class="btn btn-success">Back</button></a></div>
+   </div><hr>
    <h5>
         <p><b>Hr Contact : </b> {{ company.hr_contact }}</p>
         <p><b>Website : </b> {{ company.website }}</p>
         <p><b>Location : </b> {{ company.location }}</p></h5>
-<br>
+<hr><br>
 
    <div class="card">
       <h5>Current Drives</h5>

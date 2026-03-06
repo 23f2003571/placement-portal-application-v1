@@ -22,7 +22,10 @@
   }
    h1 {
       text-align: center;
-        color: #fffcfc;
+      color: #fffcfc;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+        text-transform: capitalize;
+        text-shadow: 20px 20px 20px#000102 ;
     }
     label {
       font-weight: bold;
@@ -51,18 +54,22 @@
         margin-left: 43%;
         width: 190px;
     }
+    a.btn{
+        border-radius: 15px;
+        margin-left: 46%;
+      }
     </style>
    <div class="container">
-      <h1>Infosys</h1>
+      <h1>{{drive.company.company_name}}'s Drive Details</h1>
    <div class="card">
   <img style="width: 200px;" src="https://www.creativefabrica.com/wp-content/uploads/2022/10/04/Architecture-building-company-icon-Graphics-40076545-1.jpg" alt="Student Icon">
-    <br><h3>Drive 1</h3><br>
-    <h5><div><p><strong>Job Title :</strong> Senior Software Developer</p></div></h5>
-    <h5><div><p><strong>Description :</strong> Responsible for developing and maintaining software applications.</p></div></h5>
-    <h5><div><p><strong>Salary :</strong> 600000</p></div></h5><br>
-    <h5><div><p><strong>Location :</strong> Bangalore</p></div></h5>
+    <br><h3>Drive Id : {{drive.id}}</h3><br>
+    <h5><div><p><strong>Job Title : </strong>{{drive.job_title}}</p></div></h5>
+    <h5><div><p><strong>Description : </strong>{{drive.job_description}}</p></div></h5>
+    <h5><div><p><strong>Salary : </strong>{{drive.salary}}</p></div></h5><br>
+    <h5><div><p><strong>Location : </strong>{{drive.company.location}}</p></div></h5>
    <div>
-          <button class="btn btn-primary">Go Back</button></div>
+          <a href="{{url_for('admindash')}}" class="btn btn-primary">Go Back</a></div>
    </div>
    </div>   
 {% endblock %}

@@ -21,7 +21,7 @@
 
   }
    h1 {
-      text-align: center;
+      margin-left: 35%;
         color: #fffcfc;
     }
     label {
@@ -52,17 +52,23 @@
     }
     a.btn {
         width: 190px;
+        border-radius: 15px;
     }
     select {
       padding: 6px;
       padding-top: 7px;
       border-radius: 6px;
-      margin-left: 4%; 
+      margin-left: 5%; 
       width: 190px;
+      border-radius: 12px;
+      background-color: rgb(215, 213, 213);
     }
     </style>
    <div class="container">
+        <div style="display: flex;">
       <h1>Student Application</h1>
+      <div style="margin-left: auto ;"><a href="{{url_for('companydash')}}" class="btn btn-success"><- Back to dashboard</a></div>
+    </div>
    <div class="card">
  <form action="{{url_for('review_application', app_id=app.id)}}" method="POST">
   <img style="width: 190px;" src="https://static.vecteezy.com/system/resources/thumbnails/000/511/962/small/57_Student.jpg" alt="Student Icon">

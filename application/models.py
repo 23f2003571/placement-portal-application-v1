@@ -51,7 +51,6 @@ class Placementdrive(db.Model):
     applications = db.relationship('Application', back_populates='drive',cascade="all, delete")
 
 
-
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('studentprofile.id'), nullable=False)

@@ -21,8 +21,11 @@
 
   }
    h1 {
-      margin-left: 30%;
+
         color: #fffcfc;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        text-transform: capitalize;
+        text-shadow: 20px 20px 20px#000102 ;
     }
     label {
       font-weight: bold;
@@ -50,6 +53,7 @@
     a.btn {
         margin-left: 35%;
         width: 190px;
+        border-radius: 15px;
     }
     </style>
    <div class="container">
@@ -59,10 +63,11 @@
       </div>
     {% endif %}
     <div style="display: flex;">
-      <h1>Company's Drive Details</h1>
+      <h1>{{drive.company.company_name}}'s Drive Details</h1>
       <div style="margin-left: auto ;"><a href="{{url_for('studentdash')}}" class="btn btn-success">Back to dashboard</a></div>
     </div>
    <div class="card">
+    <h1 style="margin-left: 37%;">{{drive.job_title}}</h1><hr>
   <img style="width: 200px;" src="https://www.creativefabrica.com/wp-content/uploads/2022/10/04/Architecture-building-company-icon-Graphics-40076545-1.jpg" alt="Student Icon">
     <br><h3>Drive Id : {{drive.id}}</h3><br>
     <h5><div><p><strong>Job Title : </strong>{{drive.job_title}}</p></div></h5>
@@ -72,7 +77,15 @@
    <div>
     {% if app %}
         <a href=""  class="btn btn-primary" style="cursor: not-allowed;">
-        Applied <b style="color: chartreuse;">({{app.status}})</b></a>
+          Applied
+        {% if app.status == "Applied" %}
+            <b style="color: rgb(232, 223, 124);">({{app.status}})</b>
+        {% elif app.status == "Reject" %}
+            <b style="color: rgb(255, 0, 0);">({{app.status}})</b>
+        {% else %}
+            <b style="color: chartreuse;">({{app.status}})</b>
+        {% endif %}
+          </a>
     {% else %}
       <a href="{{url_for('apply_job', drive_id=drive.id)}}"  class="btn btn-outline-primary">
         Apply</a>

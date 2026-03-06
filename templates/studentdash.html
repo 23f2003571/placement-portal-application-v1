@@ -22,6 +22,7 @@
    h1 {
         text-align: center;
         color: #fffcfc;
+        text-shadow: 20px 20px 20px#000102 ;
     }
     h3 {
         color: #ffffff;
@@ -61,6 +62,7 @@
         background:rgba(77, 77, 78, 0.1);
       }
   .btn{
+    width: 190px;
      border-radius: 15px;
   }
 </style>
@@ -70,13 +72,20 @@
         {{ error2 }}
       </div>
     {% endif %}
+
   <h1>Student Dashboard</h1>
   <div>
-    <form method="GET" action="{{url_for('student_search')}}">    
-      <input class="bar" type="text" name="search" placeholder="Search by name or ID">
+    <form method="GET" action="{{url_for('studentdash')}}">  
+      <input class="bar" type="text" name="search" placeholder="Search by Company Name or Job Title">
       <button type="submit" class="btn btn-outline-success">Search</button>
+                 {% if error3 %}
+      <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center; margin-top: 3px;">
+        {{ error3 }}
+      </div>
+    {% endif %} 
   </form>
   </div>
+
     <div class="card">
       <h3>Student Profile</h3>
    {% if student and student.student_name %}      
@@ -104,7 +113,7 @@
     {% for company in companies %}  
     <tr>
       <td>{{company.company_name}}</td>
-      <td><a href="{{url_for('stu_com_overview', company_id=company.id)}}"><button class="btn btn-outline-info">View Details</button></a></td> 
+      <td><a href="{{url_for('stu_com_overview', company_id=company.id)}}" class="btn btn-outline-info">View Details</a></td> 
    </tr>
         {% endfor %}
   {% else %}
@@ -137,8 +146,16 @@
       <td>{{ app.drive.company.company_name}}</td>
       <td>{{app.drive.job_title}}</td>
       <td>{{app.application_date.date()}}</td>
-      <td>{{app.status}}</td>
-      <td><a href="{{url_for('stu_com_view', drive_id=app.drive_id)}}"><button class="btn btn-outline-info">View Details</button></a></td>
+      <td>
+        {% if app.status == "Applied" %}
+            <span style="color: rgb(232, 223, 124);">{{app.status}}</span>
+        {% elif app.status == "Reject"%}
+            <span style="color: rgb(220, 20, 20);">{{app.status}}</span>
+        {% else %}
+          <span style="color: rgb(43, 220, 20);">{{app.status}}</span>
+        {% endif %}
+        </td>
+      <td><a href="{{url_for('stu_com_view', drive_id=app.drive_id)}}" class="btn btn-outline-info">View Details</a></td>
     </tr>
     {% endfor %}
     {% else %}

@@ -22,6 +22,8 @@
    h1 {
         text-align: center;
         color: #fffcfc;
+        text-shadow: 20px 20px 20px#000102 ;
+        font-family: Georgia, 'Times New Roman', Times, serif;
     }
     h3 {
         color: #ffffff;
@@ -34,6 +36,7 @@
       th,td {
          padding: 10px;
         text-align: left;
+        text-transform: capitalize;
         border-bottom: 1px solid #000000;
         color:#feffff
     }
@@ -53,36 +56,50 @@
         margin-top: 25px;
        width: 85%;
       }
-      .bar:hover{
+    .bar:hover{
         background:rgba(77, 77, 78, 0.1);
       }
       .btn{
+        width: 190px;
         border-radius: 15px;
       }
   </style>  
 <div  class="container">
   <h1>Admin Dashboard</h1>
   <div>
-    <form method="GET">    
-      <input class="bar" type="text" name="search" placeholder="Search by name or ID">
+    <form method="GET" action="{{url_for('admindash')}}">    
+      <input class="bar" type="text" name="search" placeholder="Search by name or ID for Company and Student">
       <button class="btn btn-outline-success">Search</button>
+       {% if error4 %}
+      <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center; margin-top: 3px;">
+        {{ error4 }}
+      </div>
+    {% endif %} 
   </form>
   </div>
   <!-- Registered Companies -->
    <div class="card">
-    <h3>Registered Companies</h3>
+    <h3>Approved Company Profiles</h3>
       <table>
   <thead>
     <tr>
-        <th>Company</th>
+        <th>Company Name</th>
         <th style="padding-left: 6%;">Action</th>
     </tr>
   </thead>
   <tbody>
+    {% if registered_companies %}
+      {% for company in registered_companies %}
     <tr>
-      <td> Infosys </td>
-      <td><button class="btn btn-outline-danger">Blacklist</button></td>    
+      <td>{{company.company_name}}</td>
+      <td><a href="{{url_for('company_blacklist', company_id=company.user_id)}}" class="btn btn-outline-danger">Blacklist</a></td>    
    </tr>
+   {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No Approved companies yet.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
@@ -91,30 +108,60 @@
       <h3>Registered Students</h3>
       <table>
   <thead>
-    <th>Name</th>
+    <th>Student Name</th>
+    <th>Status</th>
     <th style="padding-left: 6%;">Action</th>
   </thead>
   <tbody>
+  {% if registered_students %}
+      {% for student in registered_students %}
     <tr>
-      <td>Mark</td>
-      <td><button class="btn btn-outline-danger">Blacklist</button></td>    
+      <td>{{student.student_name}}</td>
+      <td>
+        {% if student.user.is_approved == True %}
+          <span style="color: rgb(43, 220, 20); font-weight: bold;">Approved</span>
+        {% else %}
+          <span style="color: rgb(220, 20, 20); font-weight: bold;">Blocked</span>
+        {% endif %}
+        </td>
+      <td>
+      {% if student.user.is_approved == True %}
+        <a href="{{url_for('student_blacklist', student_id=student.user.id)}}" class="btn btn-outline-danger">Blacklist</a>
+      {% else %}  
+        <a href="{{url_for('student_approve', student_id=student.user.id)}}" class="btn btn-outline-success">Approve</a>
+      {% endif %}
+      </td>    
    </tr>
+   {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No registered students yet.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
     <!-- companies applications -->
    <div class="card">
-    <h3>Company Applications</h3>
+    <h3>Registered Companies For Approval</h3>
       <table>
   <thead>
-    <th>Company</th>
+    <th>Company Username</th>
     <th style="padding-left: 6%;">Action</th>
   </thead>
   <tbody>
+  {% if approval_companies %}
+    {% for approval in approval_companies %}
     <tr>
-      <td>Infosys</td>
-      <td><button class="btn btn-outline-success">Approve</button></td>    
+      <td>{{approval.username}}</td>
+      <td><a href="{{url_for('company_approve', company_id=approval.id)}}" class="btn btn-outline-success">Approve</a></td>    
    </tr>
+ {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No registered companies yet.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
@@ -124,19 +171,45 @@
       <table>
   <thead>
     <tr>
-      <th>ID</th>
+      <th>Drive ID</th>
       <th>Job Title</th>
-      <th>Status</th>
-      <th style="padding-left: 12%;">Actions</th>
+      <th>Company Name</th>
+      <th>Internal Status</th>
+      <th>Current Status</th>
+      <th style="padding-left: 6%;">Actions</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
+  {% if job_drives %}
+    {% for job in job_drives %}
     <tr>
-      <td>1002</td>
-      <td>Drive 2</td>
-      <td>pending</td>
-      <td><button class="btn btn-outline-success">Approve</button> <button class="btn btn-outline-danger">Disapprove</button></td>
+      <td>{{job.id}}</td>
+      <td>{{job.job_title}}</td>
+      <td>{{job.company.company_name}}</td>
+      <td>
+        {% if job.is_closed == True %}
+            <span>Inactive</span>
+        {% else %}
+            <span>Active</span>
+        {% endif %}
+      </td>
+      <td>
+        <span style="color: rgb(220, 20, 20);">Not Approved</span>
+      </td>
+      <td>
+        <a href="{{url_for('drive_approve', drive_id=job.id)}}" class="btn btn-outline-success">Approve</a>
+      </td>
+      <td>
+        <a href="{{url_for('admin_view_com', drive_id=job.id)}}" class="btn btn-dark">view details</a>
+      </td>
     </tr>
+ {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No Pending Drives.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
@@ -146,17 +219,30 @@
       <table>
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Drive Name</th>
-      <th style="padding-left: 6%;">Actions</th>
+      <th>Drive ID</th>
+      <th>Job Title</th>
+      <th>Company Name</th>
+      <th style="padding-left: 14%;">Actions</th>
     </tr>
   </thead>
   <tbody>
+  {% if ongoing_drives %}
+    {% for job in ongoing_drives %}
     <tr>
-      <td>1001</td>
-      <td>Drive 1</td>
-      <td><a href="/admin_view_com"><button class="btn btn-outline-info">view details</button></a></td>
+      <td>{{job.id}}</td>
+      <td>{{job.job_title}}</td>
+      <td>{{job.company.company_name}}</td>
+      <td><a href="{{url_for('admin_view_com', drive_id=job.id)}}" class="btn btn-outline-info">view details</a>
+          <a href="{{url_for('drive_disapprove', drive_id=job.id)}}" class="btn btn-outline-danger">Disapprove</a>
     </tr>
+      </td>
+    </tr>
+ {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No Approved Drives.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
@@ -166,23 +252,31 @@
       <table>
   <thead>
     <tr>
-      <th>Sr No.</th>
+      <th>Drive Id</th>
       <th>Name</th>
-      <th>Drive</th>
+      <th>Job Title</th>
       <th>company</th>
       <th>Date</th>
       <th style="padding-left: 6%;">Actions</th>
     </tr>
   </thead>
   <tbody>
+    {% if apps %}
+      {% for app in apps %}
     <tr>
-      <td>1</td>
-      <td>abcd</td>
-      <td>Drive 2</td>
-      <td>Infosys</td>
-      <td>13/02/2026</td>
-      <td><a href="/admin_view_stu"><button class="btn btn-outline-info">View</button></a></td>
+      <td>{{app.drive_id}}</td>
+      <td>{{app.student.student_name}}</td>
+      <td>{{app.drive.job_title}}</td>
+      <td>{{app.drive.company.company_name}}</td>
+      <td>{{app.application_date.date()}}</td>
+      <td><a href="{{url_for('admin_view_stu', app_id=app.id)}}" class="btn btn-outline-info">View</a></td>
     </tr>
+ {% endfor %}
+    {% else %}
+  <tr>
+   <td style="color:#1461ce;">No Applications yet.</td>
+   </tr>
+  {% endif %}
   </tbody>
 </table>
    </div>
