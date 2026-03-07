@@ -40,14 +40,14 @@
 <div  class="container">
    <h1>Company Profile</h1>
    <div class="card">
-<form action="/company_profile" method="POST">
+<form action="{{url_for('company_profile')}}" method="POST">
    <div>
       <label for="Input1" class="form-label">Company Name :</label>
       <input name="company_name" type="text" class="form-control" id="Input1" placeholder="Drive name"><br>
    </div>
    <div>
       <label for="Input2" class="form-label">Hr Contact :</label>
-      <input name="hr_contact" type="text" class="form-control" id="Input2" placeholder="Job title"><br>
+      <input name="hr_contact" type="text" class="form-control" id="Input2" placeholder="hr contact"><br>
    </div>
    <div>
       <label for="Input3" class="form-label">Website :</label>
@@ -55,7 +55,7 @@
    </div>
    <div>
       <label for="Input4" class="form-label">Location :</label>
-      <input name="location" type="text" class="form-control" id="Input4" placeholder="Company name"><br>
+      <input name="location" type="text" class="form-control" id="Input4" placeholder="company location"><br>
    </div>
    <div>
       <button type="submit"class="btn btn-success">Save</button></div>

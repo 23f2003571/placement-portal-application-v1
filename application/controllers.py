@@ -85,12 +85,22 @@ def studentdash():
       if company:
             return redirect(url_for('stu_com_overview', company_id=company.id))
 
-      drive = Placementdrive.query.filter(
+      drives = Placementdrive.query.filter(
          Placementdrive.job_title.ilike(f"%{search}%")
-      ).first()
+      ).all()
 
-      if drive:
-         return redirect(url_for('stu_com_view', drive_id=drive.id))
+      if drives:
+         if len(drives) == 1:
+            return redirect(url_for('stu_com_view', drive_id=drives.id))
+
+         elif len(drives) > 1:
+            return render_template(
+               "studentdash.html",
+               student=student,
+               companies=companies,
+                apps=apps,
+               drives=drives
+            )
       
       return render_template('studentdash.html',
                           student=student,
@@ -280,12 +290,24 @@ def create_drive():
       return render_template('companydash.html', error1="Please complete your company profile first.")
    
    if request.method == "POST":
+
+      title=request.form['jobtitle']
+      description=request.form['jobdescription']
+      salary=request.form['salary']
+      
+      existing= Placementdrive.query.filter_by(company_id=company.id,
+                                            job_title=title,
+                                            job_description=description,
+                                            salary=salary)
+      if existing:
+         return render_template('com_create_drive.html', error="This Drive(Job) is already created.")
+   
       drive=Placementdrive(
          company_id=company.id,
-         job_title=request.form["jobtitle"],
-         job_description=request.form["jobdescription"],
-         salary=request.form["salary"]
-      )
+         job_title=title,
+         job_description=description,
+         salary=salary
+         )
       db.session.add(drive)
       db.session.commit()
       return redirect(url_for('companydash'))
@@ -358,6 +380,41 @@ def company_delete(drive_id):
    db.session.delete(drive)
    db.session.commit()
    return redirect(url_for("companydash"))
+
+@app.route('/whole_companystudent_profile/<int:student_id>/<int:company_id>')
+def whole_companystudent_profile(student_id, company_id):
+   student = Studentprofile.query.get(student_id)
+   if student is None:
+      abort(404)
+
+   apps = Application.query.join(Placementdrive).filter(
+      Application.student_id==student.id,
+      Placementdrive.company_id== company_id
+   ).all()
+   apps_count = Application.query.join(Placementdrive).filter(
+      Application.student_id==student.id,
+      Placementdrive.company_id == company_id
+   ).count()
+   return render_template('whole_companystudent_profile.html',
+                           student=student,
+                           company_id=company_id,
+                           apps=apps,
+                           apps_count=apps_count)
+
+@app.route('/company_stu_history/<int:student_id>/<int:company_id>')
+def company_stu_history(student_id, company_id):
+   student = Studentprofile.query.get(student_id)
+   if student is None:
+      abort(404)
+      
+   apps = Application.query.join(Placementdrive).filter(
+      Application.student_id==student.id,
+      Placementdrive.company_id== company_id
+   ).all()
+   return render_template('company_stu_history.html',
+                          student=student,
+                          company_id=company_id,
+                          apps=apps)
 # Admin-------------------------------------------------------------------------------------------------------
 @app.route('/admindash',methods=['GET','POST'])
 def admindash():
@@ -371,37 +428,71 @@ def admindash():
    ongoing_drives = Placementdrive.query.filter_by(is_approved=True).all()
    apps = Application.query.all()
 
+   total_students = Studentprofile.query.join(User).filter(User.is_approved==True).count()
+   total_companies = Companyprofile.query.join(User).filter(User.is_approved==True).count()
+   total_drives = Placementdrive.query.count()
+   total_apps = Application.query.count()
+
    search = request.args.get('search')
 
    if search:
-      if search.isdigit:
+      search=search.strip()
+      if search.isdigit():
          student = Studentprofile.query.filter_by(id=int(search)).first()
-         company = Companyprofile.query.filter_by(id=int(search)).first()
 
          if student:
-            return redirect(url_for(''))
-         
-         if company:
-            return redirect(url_for(''))
+            return redirect(url_for('whole_student_profile', student_id=student.id))
+         else:
+            return render_template('admindash.html',
+                           registered_companies=registered_companies,
+                          registered_students=registered_students,
+                          approval_companies=approval_companies,
+                          job_drives=job_drives,
+                          ongoing_drives=ongoing_drives,
+                          apps=apps,
+                          total_students=total_students,
+                          total_companies=total_companies,
+                          total_drives=total_drives,
+                          total_apps=total_apps,
+                          error4="Incorrect info..! Please write valid Student ID"
+                          )
       
       else:
          student = Studentprofile.query.filter(
-            Studentprofile.student_name.ilike(f"%{search}%"))
+            Studentprofile.student_name.ilike(f"%{search}%")).first()
          company = Companyprofile.query.filter(
-            Companyprofile.company_name.ilike(f"%{search}%"))
+            Companyprofile.company_name.ilike(f"%{search}%")).first()
          
          if student:
-            return redirect(url_for(''))
+            return redirect(url_for('whole_student_profile', student_id=student.id))
          
-         if company:
-            return redirect(url_for(''))
+         elif company:
+            return redirect(url_for('whole_company_profile', company_id=company.id))
+         return render_template('admindash.html',
+                           registered_companies=registered_companies,
+                          registered_students=registered_students,
+                          approval_companies=approval_companies,
+                          job_drives=job_drives,
+                          ongoing_drives=ongoing_drives,
+                          apps=apps,
+                          total_students=total_students,
+                          total_companies=total_companies,
+                          total_drives=total_drives,
+                          total_apps=total_apps,
+                          error4="Incorrect info..! Please write valid Student Name or Companny Name"
+                          )
+         
    return render_template('admindash.html',
                           registered_companies=registered_companies,
                           registered_students=registered_students,
                           approval_companies=approval_companies,
                           job_drives=job_drives,
                           ongoing_drives=ongoing_drives,
-                          apps=apps)
+                          apps=apps,
+                          total_students=total_students,
+                          total_companies=total_companies,
+                          total_drives=total_drives,
+                          total_apps=total_apps)
 
 @app.route('/admin_view_stu/<int:app_id>')
 def admin_view_stu(app_id):
@@ -481,3 +572,98 @@ def drive_disapprove(drive_id):
    drive.is_approved=False
    db.session.commit()
    return redirect(url_for('admindash'))
+
+@app.route('/whole_student_profile/<int:student_id>')
+def whole_student_profile(student_id):
+   student = Studentprofile.query.get(student_id)
+   if student is None:
+      abort(404)
+
+   apps = Application.query.filter_by(student_id=student.id).all()
+   apps_count = Application.query.filter_by(student_id=student.id).count()
+   return render_template('whole_student_profile.html',
+                           student=student,
+                           apps=apps,
+                           apps_count=apps_count)
+
+@app.route('/admin_stu_history/<int:student_id>')
+def admin_stu_history(student_id):
+   student = Studentprofile.query.get(student_id)
+   if student is None:
+      abort(404)
+      
+   apps=Application.query.filter_by(student_id=student.id).all()
+   return render_template('admin_stu_history.html',
+                          student=student,
+                          apps=apps)
+
+@app.route('/whole_company_profile/<int:company_id>')
+def whole_company_profile(company_id):
+   company = Companyprofile.query.get(company_id)
+   if company is None:
+      abort(404)
+
+   drives = Placementdrive.query.filter_by(company_id=company.id).all()
+   
+   drives_count = Placementdrive.query.filter_by(company_id=company.id).count()
+
+   drive_data = []
+
+   for drive in drives:
+    total_apps = Application.query.filter_by(drive_id=drive.id).count()
+
+    drive_data.append({
+        "drive": drive,
+        "total_apps": total_apps
+    })
+   
+   apps = Application.query.join(Placementdrive).filter(
+       Placementdrive.company_id == company.id).all()
+   apps_count = Application.query.join(Placementdrive).filter(
+       Placementdrive.company_id == company.id).count()
+   
+   return render_template('whole_company_profile.html',
+                           company=company,
+                           drives=drives,
+                           apps=apps,
+                           drive_data=drive_data,
+                           apps_count=apps_count,
+                           drives_count=drives_count
+                           )
+#------------------------------------------------------------------------------
+@app.route('/admin_indirectview_student/<int:app_id>')
+def admin_indirectview_student(app_id):
+
+    app = Application.query.get(app_id)
+
+    return render_template(
+        "admin_view_stu.html",
+        app=app,
+        back_url=url_for('whole_student_profile',
+                         student_id=app.student_id)
+    )
+
+@app.route('/company_indirectview_student/<int:app_id>/<int:company_id>')
+def company_indirectview_student(app_id,company_id):
+
+    app = Application.query.get(app_id)
+
+    return render_template(
+        "admin_view_stu.html",
+        app=app,
+        back_url=url_for('whole_companystudent_profile',
+                         student_id=app.student_id, 
+                         company_id=company_id)
+    )
+
+
+@app.route('/admin_mainpageview_student/<int:app_id>')
+def admin_mainpageview_student(app_id):
+
+    app = Application.query.get(app_id)
+
+    return render_template(
+        "admin_view_stu.html",
+        app=app,
+        back_url=url_for('admindash')
+    )

@@ -18,11 +18,13 @@
         border: 1px solid #737373;
         border-radius: 12px;
         padding: 20px;
-
+        margin-top: 25px;
   }
    h1 {
-      text-align: center;
+         text-align: center;
         color: #fffcfc;
+        text-shadow: 20px 20px 20px#000102 ;
+        font-family: Georgia, 'Times New Roman', Times, serif;
     }
     label {
       font-weight: bold;
@@ -44,45 +46,64 @@
       th,td {
          padding: 10px;
         text-align: left;
+        text-transform: capitalize;
         border-bottom: 1px solid #000000;
         color:#feffff
     }
-    button {
-        margin-left: 35%;
-        width: 190px;
-    }
-    select {
-      padding: 6px;
-      padding-top: 7px;
-      border-radius: 6px;
-      margin-left: 4%; 
-      width: 190px;
-    }
-     a.btn {
+    .btn {
+        margin-left: 43%;
         width: 190px;
         border-radius: 15px;
     }
-    </style>
+</style>
    <div class="container">
-      <h1>Student Application</h1>
+    <h1>{{student.student_name}}'s History</h1>
+    <h5><strong>Student Name : </strong>{{student.student_name}}</h5><br>
+    <h5><strong>Department : </strong>{{student.department}}</h5><br>
+    <h5><strong>Cgpa : </strong>{{student.cgpa}}</h5>
+    <div style="display: flex;">
+      {% if apps %}
+    <div style="margin-left: auto ;"><a href="{{url_for('whole_companystudent_profile', student_id=student.id, company_id=apps[0].drive.company_id)}}" class="btn btn-success"><- Go Back</a></div>
+   {% endif %} 
+   </div>
+  <br>
    <div class="card">
-  <img style="width: 190px;" src="https://static.vecteezy.com/system/resources/thumbnails/000/511/962/small/57_Student.jpg" alt="Student Icon">
-    <br><h3>{{app.student.student_name}}</h3><br>
-    <h5><p><strong>Department : </strong>{{app.student.department}}</p></h5>
-    <h5><p><strong>Drive : </strong>{{app.drive.id}}</p></h5>
-    <h5><p><strong>Cgpa : </strong>{{app.student.cgpa}}</p></h5>
-    <h5><p><strong>Job Title : </strong>{{app.drive.job_title}}</p></h5>
-    <h5><p><strong>Application Status : </strong>
+     <table>
+  <thead>
+    <tr>
+      <th>Drive ID</th>
+      <th>Company Name</th>
+      <th>Job Title</th>
+      <th>Results</th>
+      <th>Applied Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% if apps %}
+    {% for app in apps %}
+    <tr>
+      <th>{{app.drive.id}}</th>
+      <td>{{app.drive.company.company_name}}</td>
+      <td>{{app.drive.job_title}}</td>
+      <td>
         {% if app.status == "Applied" %}
             <span style="color: rgb(232, 223, 124);">{{app.status}}</span>
         {% elif app.status == "Reject"%}
             <span style="color: rgb(220, 20, 20);">{{app.status}}</span>
         {% else %}
           <span style="color: rgb(43, 220, 20);">{{app.status}}</span>
-        {% endif %}</p></h5>
-   <div>
-      <a href="{{app.student.resume}}" target="_blank" style="margin-left: 32%;" class="btn btn-outline-primary">View Resume</a>
-      <a href="{{ back_url }}" style="margin-left: 2%;" class="btn btn-outline-primary">Back</a></div>
-   </div>
-   </div>   
+        {% endif %}
+      </td>
+      <td>{{app.application_date.date()}}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+       <td style="color:#1461ce;">No record yet..</td>
+    </tr>
+  {% endif %}
+  </tbody>
+</table>
+</div>
+</div>
 {% endblock %}

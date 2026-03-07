@@ -31,12 +31,17 @@
         text-shadow: 15px 15px 15px #000000;
     }
     button {
-        margin-left: 45%;
+        margin-left: 38%;
     }
 </style>
 <div  class="container">
    <h1>Create a Drive</h1>
    <div class="card">
+    {% if error %}
+      <div class="alert alert-warning" role="alert" style="padding: 0%; text-align: center;">
+        {{ error }}
+      </div>
+    {% endif %}
    <form action="/create_drive" method="post">
    <div>
       <label for="Input2" class="form-label">Job Title:</label>
@@ -51,7 +56,8 @@
       <input name="salary" type="text" class="form-control" id="Input6" placeholder="Salary"><br>
    </div>
    <div>
-      <button type='submit'class="btn btn-success">Save</button></div>
+      <button type='submit'class="btn btn-success">Save</button>
+    <a href="{{url_for('companydash')}}" class="btn btn-success">Back</a></div>
 </form>
    </div>
 </div>

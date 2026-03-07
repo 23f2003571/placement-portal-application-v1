@@ -35,6 +35,7 @@
       th,td {
          padding: 10px;
         text-align: left;
+        text-transform: capitalize;
         border-bottom: 1px solid #000000;
         color:#feffff
     }
@@ -71,7 +72,7 @@
         <p style="font-style: italic; font-weight: bold; color: brown;">Profile Incomplete</p>
     {% endif %}
     
-    <a href="/company_profile">
+    <a href="{{url_for('company_profile')}}">
         <button class="btn btn-warning">Complete / Edit Profile</button>
     </a>
 </div>
@@ -87,6 +88,7 @@
       <th>Student Cgpa</th>
       <th style="padding-left: 70px;">Resume</th>
       <th></th>
+      <th></th>
     </thead>
     <tbody>
     {% if drives %}
@@ -99,7 +101,8 @@
         <td>{{app.student.department}}</td>
         <td>{{app.student.cgpa}}</td>
         <td><a href="{{ app.student.resume }}" target="_blank" class="btn btn-secondary">Resume Link</a></td>
-        <td><a href="{{url_for('review_application', app_id=app.id)}}" class="btn btn-dark">View Application</a></td>
+        <td><a href="{{url_for('whole_companystudent_profile', student_id=app.student.id, company_id=app.drive.company_id)}}" class="btn btn-dark">view Profile & History</a>
+                  <td><a href="{{url_for('review_application', app_id=app.id)}}" class="btn btn-outline-light">View Application</a></td>
       </tr>
         {% endfor %}
       {% endfor %}

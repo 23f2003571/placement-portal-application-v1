@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #141517, #3a3f47);
+        color: #e2e8f0;
+    }
+    .container {
+        width: 95%;
+        margin: auto;
+    }
+  .card{
+        background:rgba(255,255,255,0.05);
+        color: #f9f6f6;
+        border: 1px solid #737373;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+  }
+   h1 {
+        text-align: center;
+        color: #fffcfc;
+        text-shadow: 20px 20px 20px#000102 ;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    h3 {
+        color: #ffffff;
+        text-shadow: 15px 15px 15px #000000;
+    }
+   table {
+        width: 100%;
+        margin-top: 10px;
+    }
+      th,td {
+         padding: 10px;
+        text-align: left;
+        text-transform: capitalize;
+        border-bottom: 1px solid #000000;
+        color:#feffff
+    }
+    th {
+        color: #ffffff;
+        text-shadow: 2px 2px 2px #c18585;
+    } 
+    button{
+      width: 190px;
+    }
+      .btn{
+        width: 190px;
+        border-radius: 15px;
+      }
+      .s-card{
+        background:rgba(255,255,255,0.05);
+        border: 1px solid #737373;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        margin-left: 180px;
+        text-align: center;
+        color: #f9f6f6;
+        box-shadow: 10px 10px 10px#000102;
+      }
+      .s-card h3{
+        text-shadow: 10px 10px 10px #000000;
+      }
+      .s-card p{
+        text-shadow: 5px 5px 5px #000000;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: #3ed0f8;
+        font-size:xx-large;
+        font-weight: bold;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      }
+            p{
+        text-shadow: 5px 5px 5px #000000;
+        font-size: large;
+      }
+  </style>
+  <div class="container">
+<h1>{{student.student_name}}'s Profile</h1>
+  <div style="display:flex;">
+    <div class="s-card">
+      <h3>Total Applied Applications</h3>
+      <p>{{ apps_count }}</p>
+</div>
+
+<div class="s-card">
+  <h3>History Of Application</h3>
+  <p><a href="{{url_for('admin_stu_history', student_id=student.id)}}" class="btn btn-info">History</a></p>
+</div>
+<div>
+    <div style="margin-left: 60% ;"><a href="{{url_for('admindash')}}" class="btn btn-success"><- Back to dashboard</a></div>
+</div>
+  </div>
+
+   <div class="card">
+   {% if student and student.student_name %} 
+        <p><h3><b>Student ID : </b> {{ student.id }}</h3></p>  
+       <p><b>Name : </b> {{ student.student_name }}</p>
+        <p><b>Department : </b> {{ student.department }}</p>
+        <p><b>Cgpa : </b> {{ student.cgpa }}</p>
+        <p><b>Resume : </b><a href="{{ student.resume }}" target="_blank">resume-link</a></p>
+    {% else %}
+        <p style="font-style: italic; font-weight: bold; color: brown;">Profile Incomplete</p>
+    {% endif %}
+   </div>
+
+   <div class="card">
+    <h3>Applied Drives</h3>
+      <table>
+  <thead>
+    <tr>
+      <th>Drive Name</th>
+      <th>Company</th>
+      <th>Job Title</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if apps %}
+      {% for app in apps %}
+    <tr>
+      <td>{{app.id}}</td>
+      <td>{{ app.drive.company.company_name}}</td>
+      <td>{{app.drive.job_title}}</td>
+      <td>{{app.application_date.date()}}</td>
+      <td>
+        {% if app.status == "Applied" %}
+            <span style="color: rgb(232, 223, 124);">{{app.status}}</span>
+        {% elif app.status == "Reject"%}
+            <span style="color: rgb(220, 20, 20);">{{app.status}}</span>
+        {% else %}
+          <span style="color: rgb(43, 220, 20);">{{app.status}}</span>
+        {% endif %}
+        </td>
+      <td><a href="{{url_for('admin_indirectview_student', app_id=app.id)}}" class="btn btn-outline-info">View Details</a></td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+       <td style="color:#1461ce;">Not applied yet.</td>
+    </tr>
+  {% endif %}
+  </tbody>
+</table>
+   </div>
+
+</div>
+{% endblock %}

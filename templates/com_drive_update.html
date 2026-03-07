@@ -43,12 +43,14 @@
       th,td {
          padding: 10px;
         text-align: left;
+        text-transform: capitalize;
         border-bottom: 1px solid #000000;
         color:#feffff
     }
     a.btn {
         margin-left: 45%;
         border-radius: 15px;
+        width: 190px;
     }
 </style>
 <div  class="container">
@@ -67,7 +69,9 @@
     <tr>
       <td>{{app.student.student_name}}</td>
       <td><a href="{{url_for('review_application', app_id=app.id)}}" style=" width: 200px;" class="btn btn-outline-info">review application</a></td>    
-   </tr>
+    <td><a href="{{url_for('whole_companystudent_profile', student_id=app.student.id, company_id=app.drive.company_id)}}" class="btn btn-dark">view Profile & History</a>
+</td>
+ </tr>
   </tbody>
   {% endfor %}
   {% else %}

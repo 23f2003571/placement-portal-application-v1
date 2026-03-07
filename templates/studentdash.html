@@ -35,6 +35,7 @@
       th,td {
          padding: 10px;
         text-align: left;
+        text-transform: capitalize;
         border-bottom: 1px solid #000000;
         color:#feffff
     }
@@ -84,6 +85,21 @@
       </div>
     {% endif %} 
   </form>
+  <div>
+<table>
+  <tbody>
+    {% if drives %}
+      {% for drive in drives %}
+      <tr>
+          <td>{{drive.job_title}}</td>
+          <td>{{drive.company.company_name}}</td>
+      <td><a href="{{url_for('stu_com_view', drive_id=drive.id)}}" class="btn btn-outline-info">View details</a></td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+  </div>
   </div>
 
     <div class="card">
@@ -97,7 +113,7 @@
         <p style="font-style: italic; font-weight: bold; color: brown;">Profile Incomplete</p>
     {% endif %}
     
-    <a href="/student_profile">
+    <a href="{{url_for('student_profile')}}">
         <button class="btn btn-warning">Complete / Edit Profile</button>
     </a>
 </div>

@@ -63,12 +63,35 @@
         width: 190px;
         border-radius: 15px;
       }
+      .s-card{
+        background:rgba(255,255,255,0.05);
+        border: 1px solid #737373;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        margin-left: auto;
+        text-align: center;
+        color: #f9f6f6;
+        box-shadow: 10px 10px 10px#000102;
+      }
+      .s-card h3{
+        text-shadow: 10px 10px 10px #000000;
+      }
+      .s-card p{
+        text-shadow: 5px 5px 5px #000000;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: #3ed0f8;
+        font-size:xx-large;
+        font-weight: bold;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      }
   </style>  
 <div  class="container">
   <h1>Admin Dashboard</h1>
   <div>
     <form method="GET" action="{{url_for('admindash')}}">    
-      <input class="bar" type="text" name="search" placeholder="Search by name or ID for Company and Student">
+      <input class="bar" type="text" name="search" placeholder="Search Student by Name or ID and search Company by Name">
       <button class="btn btn-outline-success">Search</button>
        {% if error4 %}
       <div class="alert alert-primary" role="alert" style="padding: 0%; text-align: center; margin-top: 3px;">
@@ -76,6 +99,25 @@
       </div>
     {% endif %} 
   </form>
+  </div>
+  <div style="display:flex;">
+    <div class="s-card">
+      <h3>Total Students</h3>
+      <p>{{ total_students }}</p>
+</div>
+<div class="s-card">
+  <h3>Total Company Profiles</h3>
+  <p>{{ total_companies }}</p>
+</div>
+<div class="s-card">
+  <h3>Total Placement Drives</h3>
+  <p>{{ total_drives }}</p>
+</div>
+
+<div class="s-card">
+  <h3>Total Applications</h3>
+  <p>{{ total_apps }}</p>
+</div>
   </div>
   <!-- Registered Companies -->
    <div class="card">
@@ -85,6 +127,7 @@
     <tr>
         <th>Company Name</th>
         <th style="padding-left: 6%;">Action</th>
+        <th></th>
     </tr>
   </thead>
   <tbody>
@@ -93,7 +136,10 @@
     <tr>
       <td>{{company.company_name}}</td>
       <td><a href="{{url_for('company_blacklist', company_id=company.user_id)}}" class="btn btn-outline-danger">Blacklist</a></td>    
-   </tr>
+      <td>
+        <a href="{{url_for('whole_company_profile', company_id=company.id)}}" class="btn btn-dark">view Profile</a>
+      </td>
+    </tr>
    {% endfor %}
     {% else %}
   <tr>
@@ -111,6 +157,7 @@
     <th>Student Name</th>
     <th>Status</th>
     <th style="padding-left: 6%;">Action</th>
+    <th></th>
   </thead>
   <tbody>
   {% if registered_students %}
@@ -130,7 +177,10 @@
       {% else %}  
         <a href="{{url_for('student_approve', student_id=student.user.id)}}" class="btn btn-outline-success">Approve</a>
       {% endif %}
-      </td>    
+      </td> 
+      <td>
+        <a href="{{url_for('whole_student_profile', student_id=student.id)}}" class="btn btn-dark">view Profile & History</a>
+      </td>   
    </tr>
    {% endfor %}
     {% else %}
@@ -269,7 +319,7 @@
       <td>{{app.drive.job_title}}</td>
       <td>{{app.drive.company.company_name}}</td>
       <td>{{app.application_date.date()}}</td>
-      <td><a href="{{url_for('admin_view_stu', app_id=app.id)}}" class="btn btn-outline-info">View</a></td>
+      <td><a href="{{url_for('admin_mainpageview_student', app_id=app.id)}}" class="btn btn-outline-info">View</a></td>
     </tr>
  {% endfor %}
     {% else %}
