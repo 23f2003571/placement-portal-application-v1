@@ -205,9 +205,6 @@ def apply_job(drive_id):
    db.session.commit()
    return redirect(url_for('stu_com_view', drive_id=drive_id))
 
-@app.route('/student_search')
-def student_search():
-    return render_template("studentdash.html")
 # Company-----------------------------------------------------------------------------------------------------
 @app.route('/companydash',methods=['GET','POST'])
 def companydash():
@@ -296,9 +293,8 @@ def create_drive():
       salary=request.form['salary']
       
       existing= Placementdrive.query.filter_by(company_id=company.id,
-                                            job_title=title,
-                                            job_description=description,
-                                            salary=salary)
+                                            job_title=title
+                                            ).first()
       if existing:
          return render_template('com_create_drive.html', error="This Drive(Job) is already created.")
    
@@ -635,6 +631,8 @@ def whole_company_profile(company_id):
 def admin_indirectview_student(app_id):
 
     app = Application.query.get(app_id)
+    if app is None:
+       abort(404)
 
     return render_template(
         "admin_view_stu.html",
@@ -647,7 +645,9 @@ def admin_indirectview_student(app_id):
 def company_indirectview_student(app_id,company_id):
 
     app = Application.query.get(app_id)
-
+    if app is None:
+       abort(404)
+       
     return render_template(
         "admin_view_stu.html",
         app=app,
@@ -660,9 +660,11 @@ def company_indirectview_student(app_id,company_id):
 @app.route('/admin_mainpageview_student/<int:app_id>')
 def admin_mainpageview_student(app_id):
 
-    app = Application.query.get(app_id)
-
-    return render_template(
+   app = Application.query.get(app_id)
+   if app is None:
+       abort(404)
+   
+   return render_template(
         "admin_view_stu.html",
         app=app,
         back_url=url_for('admindash')

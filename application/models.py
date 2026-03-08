@@ -6,7 +6,7 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(50), nullable=False)  # admin/company/student
+    role = db.Column(db.String(50), nullable=False)  # admin/company/ student
 
     is_approved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -56,7 +56,7 @@ class Application(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('studentprofile.id'), nullable=False)
     drive_id = db.Column(db.Integer, db.ForeignKey('placementdrive.id'), nullable=False)
     application_date = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default='Applied')  #Applied/Shortlisted/Selected/Rejected
+    status = db.Column(db.String(50), default='Applied')  #Applied/Shortlist/ Selectad/Reject
 
     student = db.relationship('Studentprofile', back_populates='applications')
     drive = db.relationship('Placementdrive', back_populates='applications')
