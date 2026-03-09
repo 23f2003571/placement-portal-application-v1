@@ -93,7 +93,7 @@
       <tr>
           <td>{{drive.job_title}}</td>
           <td>{{drive.company.company_name}}</td>
-      <td><a href="{{url_for('stu_com_view', drive_id=drive.id)}}" class="btn btn-outline-info">View details</a></td>
+      <td><a href="{{url_for('stu_com_view', drive_id=drives[0].id)}}" class="btn btn-outline-info">View details</a></td>
         </tr>
       {% endfor %}
     {% endif %}

@@ -91,7 +91,7 @@ def studentdash():
 
       if drives:
          if len(drives) == 1:
-            return redirect(url_for('stu_com_view', drive_id=drives.id))
+            return redirect(url_for('stu_com_view', drive_id=drives[0].id))
 
          elif len(drives) > 1:
             return render_template(
